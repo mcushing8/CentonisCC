@@ -34,15 +34,24 @@ service cloud.firestore {
     }
 
     match /teams/{teamId} {
-      allow read: if isTeamMember(teamId);
+      allow read: if isTeamMember(teamId) || (isSignedIn() && resource.data.ownerUserId == request.auth.uid);
       allow create: if isSignedIn() && request.resource.data.ownerUserId == request.auth.uid;
       allow update, delete: if isTeamOwner(teamId);
     }
 
     match /teamMemberships/{membershipId} {
       allow read: if isSignedIn();
-      allow create, update: if isSignedIn() &&
-        request.resource != null &&
+      allow create: if isSignedIn() && request.resource != null && (
+        (
+          request.resource.data.userId == request.auth.uid &&
+          request.resource.data.role == "owner" &&
+          membershipId == membershipDocId(request.resource.data.teamId, request.auth.uid) &&
+          exists(/databases/$(database)/documents/teams/$(request.resource.data.teamId)) &&
+          get(/databases/$(database)/documents/teams/$(request.resource.data.teamId)).data.ownerUserId == request.auth.uid
+        ) ||
+        isTeamOwner(request.resource.data.teamId)
+      );
+      allow update: if isSignedIn() && request.resource != null &&
         isTeamOwner(request.resource.data.teamId);
       allow delete: if isSignedIn() && isTeamOwner(resource.data.teamId);
     }

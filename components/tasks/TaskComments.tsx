@@ -23,9 +23,9 @@ export function TaskComments({
   const [text, setText] = useState("");
 
   const refresh = useCallback(async () => {
-    const next = await listTaskComments(taskId);
+    const next = await listTaskComments(taskId, workspaceType, workspaceId);
     setComments(next.sort((a, b) => a.createdAt.localeCompare(b.createdAt)));
-  }, [taskId]);
+  }, [taskId, workspaceId, workspaceType]);
 
   useEffect(() => {
     void refresh();

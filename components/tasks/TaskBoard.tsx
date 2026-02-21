@@ -108,11 +108,22 @@ export function TaskBoard({
   const [title, setTitle] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [assigneeUserId, setAssigneeUserId] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const refresh = useCallback(async () => {
-    const next = await listTasksByGoal(goalId);
-    setTasks(next);
-  }, [goalId]);
+    try {
+      setErrorMessage("");
+      const next = await listTasksByGoal(goalId, workspaceType, workspaceId);
+      setTasks(next);
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Could not load tasks right now.";
+      setErrorMessage(message);
+      setTasks([]);
+    }
+  }, [goalId, workspaceId, workspaceType]);
 
   useEffect(() => {
     void refresh();
@@ -147,6 +158,9 @@ export function TaskBoard({
   return (
     <section className="space-y-4 rounded-lg bg-white p-4 shadow-sm">
       <h2 className="text-lg font-semibold">Tasks</h2>
+      {errorMessage ? (
+        <p className="rounded bg-red-50 p-2 text-sm text-red-600">{errorMessage}</p>
+      ) : null}
       <form onSubmit={handleCreateTask} className="grid gap-2 md:grid-cols-4">
         <input
           className="rounded border border-slate-300 p-2"

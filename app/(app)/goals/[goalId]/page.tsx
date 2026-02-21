@@ -13,14 +13,31 @@ export default function GoalTasksPage() {
   const goalId = params.goalId;
   const { user, isLoading } = useAuth();
   const [goal, setGoal] = useState<Goal | null>(null);
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     async function loadGoal() {
-      const nextGoal = await getGoalById(goalId);
-      setGoal(nextGoal);
+      if (isLoading || !user) {
+        return;
+      }
+      try {
+        setErrorMessage("");
+        const nextGoal = await getGoalById(goalId);
+        setGoal(nextGoal);
+      } catch (error) {
+        const message =
+          error instanceof Error
+            ? error.message
+            : "Could not load this goal right now.";
+        setErrorMessage(message);
+      }
     }
     void loadGoal();
-  }, [goalId]);
+  }, [goalId, isLoading, user]);
+
+  if (errorMessage) {
+    return <p className="rounded bg-red-50 p-2 text-sm text-red-600">{errorMessage}</p>;
+  }
 
   if (isLoading || !user || !goal) {
     return <p className="text-sm text-slate-600">Loading goal tasks...</p>;

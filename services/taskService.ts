@@ -39,9 +39,18 @@ export async function createTask(input: {
   await addDoc(collection(db, "tasks"), payload);
 }
 
-export async function listTasksByGoal(goalId: string): Promise<Task[]> {
+export async function listTasksByGoal(
+  goalId: string,
+  workspaceType: WorkspaceType,
+  workspaceId: string,
+): Promise<Task[]> {
   const snapshot = await getDocs(
-    query(collection(db, "tasks"), where("goalId", "==", goalId)),
+    query(
+      collection(db, "tasks"),
+      where("goalId", "==", goalId),
+      where("workspaceType", "==", workspaceType),
+      where("workspaceId", "==", workspaceId),
+    ),
   );
   return snapshot.docs.map(
     (item) => ({ id: item.id, ...item.data() }) as Task,

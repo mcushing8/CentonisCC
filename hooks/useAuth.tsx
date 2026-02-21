@@ -62,7 +62,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       pathname.startsWith("/teams") ||
       pathname.startsWith("/goals");
 
-    if (!user && isAppRoute) {
+    if (!user && (isAppRoute || pathname === "/")) {
       router.replace("/login");
     }
     if (user && (pathname === "/" || isAuthRoute)) {

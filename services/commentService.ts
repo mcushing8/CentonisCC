@@ -27,9 +27,18 @@ export async function createComment(input: {
   await addDoc(collection(db, "comments"), payload);
 }
 
-export async function listTaskComments(taskId: string): Promise<Comment[]> {
+export async function listTaskComments(
+  taskId: string,
+  workspaceType: WorkspaceType,
+  workspaceId: string,
+): Promise<Comment[]> {
   const snapshot = await getDocs(
-    query(collection(db, "comments"), where("taskId", "==", taskId)),
+    query(
+      collection(db, "comments"),
+      where("taskId", "==", taskId),
+      where("workspaceType", "==", workspaceType),
+      where("workspaceId", "==", workspaceId),
+    ),
   );
   return snapshot.docs.map(
     (item) => ({ id: item.id, ...item.data() }) as Comment,
