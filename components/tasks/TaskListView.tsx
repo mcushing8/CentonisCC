@@ -2,7 +2,6 @@
 
 import type { Task, TeamMembership } from "@/types/models";
 import { updateTask, deleteTask, isTaskBlocked } from "@/services/taskService";
-import { useState } from "react";
 
 type TaskListViewProps = {
   tasks: Task[];
@@ -11,9 +10,8 @@ type TaskListViewProps = {
 };
 
 export function TaskListView({ tasks, members, onUpdate }: TaskListViewProps) {
-  const [editingId, setEditingId] = useState<string | null>(null);
-
   async function handleStatusChange(task: Task, newStatus: string) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     await updateTask(task.id, { status: newStatus as any });
     await onUpdate();
   }

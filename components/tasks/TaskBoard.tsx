@@ -7,9 +7,8 @@ import {
   useDroppable,
 } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
-import { useCallback, useEffect, useState, useRef } from "react";
-import { createTask, deleteTask, listTasksByGoal, moveTask, updateTask, getSubtasks, isTaskBlocked } from "@/services/taskService";
-import { listTeamMemberships } from "@/services/teamService";
+import { useEffect, useState } from "react";
+import { deleteTask, moveTask, updateTask, getSubtasks, isTaskBlocked } from "@/services/taskService";
 import type { Task, TaskStatus, WorkspaceType, TeamMembership } from "@/types/models";
 import { TaskComments } from "@/components/tasks/TaskComments";
 import { RichTextEditor } from "@/components/shared/RichTextEditor";
@@ -163,9 +162,9 @@ function TaskCard({
 
   if (isEditing) {
     return (
-      <div ref={setNodeRef} style={style} className="space-y-2 rounded-lg border-2 border-blue-300 bg-white p-3 shadow-sm">
+      <div ref={setNodeRef} style={style} className="space-y-2 rounded-xl border border-zinc-700 bg-zinc-900 p-3 shadow-sm">
         <input
-          className="w-full rounded border border-slate-300 p-2 text-sm font-medium"
+          className="w-full rounded-lg border border-zinc-700 bg-zinc-800 p-2 text-sm font-medium text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:border-zinc-500"
           value={editTitle}
           onChange={(e) => setEditTitle(e.target.value)}
           placeholder="Task title"
@@ -178,19 +177,20 @@ function TaskCard({
         />
         <div className="grid grid-cols-2 gap-2">
           <div>
-            <label className="text-[10px] text-slate-500 uppercase font-bold">Due Date</label>
+            <label className="text-[10px] text-zinc-500 uppercase font-bold tracking-wider">Due Date</label>
             <input
               type="date"
-              className="w-full rounded border border-slate-300 p-1.5 text-xs"
+              className="w-full rounded-lg border border-zinc-700 bg-zinc-800 p-1.5 text-xs text-zinc-100 focus:outline-none"
               value={editDueDate}
               onChange={(e) => setEditDueDate(e.target.value)}
             />
           </div>
           <div>
-            <label className="text-[10px] text-slate-500 uppercase font-bold">Priority</label>
+            <label className="text-[10px] text-zinc-500 uppercase font-bold tracking-wider">Priority</label>
             <select
-              className="w-full rounded border border-slate-300 p-1.5 text-xs"
+              className="w-full rounded-lg border border-zinc-700 bg-zinc-800 p-1.5 text-xs text-zinc-100 focus:outline-none"
               value={editPriority}
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               onChange={(e) => setEditPriority(e.target.value as any)}
             >
               <option value="low">Low</option>
@@ -201,20 +201,20 @@ function TaskCard({
         </div>
         <div className="grid grid-cols-2 gap-2">
           <div>
-            <label className="text-[10px] text-slate-500 uppercase font-bold">Est. Time (min)</label>
+            <label className="text-[10px] text-zinc-500 uppercase font-bold tracking-wider">Est. Time (min)</label>
             <input
               type="number"
-              className="w-full rounded border border-slate-300 p-1.5 text-xs"
+              className="w-full rounded-lg border border-zinc-700 bg-zinc-800 p-1.5 text-xs text-zinc-100 placeholder:text-zinc-600 focus:outline-none"
               placeholder="0"
               value={editEstimate || ""}
               onChange={(e) => setEditEstimate(Number(e.target.value) || 0)}
             />
           </div>
           <div>
-            <label className="text-[10px] text-slate-500 uppercase font-bold">Actual Time (min)</label>
+            <label className="text-[10px] text-zinc-500 uppercase font-bold tracking-wider">Actual Time (min)</label>
             <input
               type="number"
-              className="w-full rounded border border-slate-300 p-1.5 text-xs"
+              className="w-full rounded-lg border border-zinc-700 bg-zinc-800 p-1.5 text-xs text-zinc-100 placeholder:text-zinc-600 focus:outline-none"
               placeholder="0"
               value={editActual || ""}
               onChange={(e) => setEditActual(Number(e.target.value) || 0)}
@@ -223,9 +223,9 @@ function TaskCard({
         </div>
         {task.workspaceType === "team" && (
           <div>
-            <label className="text-[10px] text-slate-500 uppercase font-bold">Assignee</label>
+            <label className="text-[10px] text-zinc-500 uppercase font-bold tracking-wider">Assignee</label>
             <select
-              className="w-full rounded border border-slate-300 p-1.5 text-xs"
+              className="w-full rounded-lg border border-zinc-700 bg-zinc-800 p-1.5 text-xs text-zinc-100 focus:outline-none"
               value={editAssignee}
               onChange={(e) => setEditAssignee(e.target.value)}
             >
@@ -241,13 +241,13 @@ function TaskCard({
         <div className="flex gap-2 pt-1">
           <button
             onClick={() => void handleSave()}
-            className="flex-1 rounded bg-blue-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-700"
+            className="flex-1 rounded-lg bg-zinc-100 px-3 py-1.5 text-xs font-medium text-zinc-900 hover:bg-white"
           >
             Save
           </button>
           <button
             onClick={handleCancel}
-            className="flex-1 rounded border border-slate-300 px-3 py-1.5 text-xs font-medium hover:bg-slate-50"
+            className="flex-1 rounded-lg border border-zinc-700 px-3 py-1.5 text-xs font-medium text-zinc-300 hover:bg-zinc-800/50"
           >
             Cancel
           </button>
@@ -257,25 +257,25 @@ function TaskCard({
   }
 
   const priorityColors = {
-    low: "bg-slate-100 text-slate-600 border-slate-300",
-    medium: "bg-blue-100 text-blue-700 border-blue-300",
-    high: "bg-red-100 text-red-700 border-red-300",
+    low: "bg-zinc-800/50 text-zinc-400 border-zinc-700/50",
+    medium: "bg-blue-500/10 text-blue-400 border-blue-500/20",
+    high: "bg-red-500/10 text-red-400 border-red-500/20",
   };
 
   return (
-    <div className={`${isSubtask ? "ml-4 border-l-2 border-l-blue-300 pl-2" : ""}`}>
+    <div className={`${isSubtask ? "ml-4 border-l border-l-zinc-300 dark:border-l-zinc-700 pl-2" : ""}`}>
       <article
         ref={setNodeRef}
         style={style}
-        className={`group space-y-2 rounded-lg border bg-white p-2.5 shadow-sm transition-all hover:shadow-md ${
-          task.priority === "high" ? "border-l-4 border-l-red-500" : "border-slate-200"
-        } ${isOverdue ? "border-red-300 bg-red-50" : ""} ${blocked ? "opacity-60" : ""}`}
+        className={`group space-y-2 rounded-xl border bg-white/60 dark:bg-zinc-900/40 p-3 shadow-sm backdrop-blur-sm transition-all hover:bg-white/80 dark:hover:bg-zinc-800/40 hover:border-zinc-300 dark:hover:border-zinc-700/80 ${
+          task.priority === "high" ? "border-l-2 border-l-red-500/50" : "border-zinc-200 dark:border-zinc-800/80"
+        } ${isOverdue ? "border-red-400 bg-red-50 dark:border-red-500/30 dark:bg-red-500/5" : ""} ${blocked ? "opacity-50" : ""}`}
       >
       {/* Header: Title (draggable & inline editable) */}
       {isTitleEditing ? (
         <input
           autoFocus
-          className="w-full rounded border-blue-500 border p-1 text-sm font-medium text-slate-800 outline-none"
+          className="w-full rounded border-zinc-400 dark:border-zinc-500 border bg-white dark:bg-zinc-800 p-1 text-sm font-medium text-zinc-900 dark:text-zinc-100 outline-none"
           value={editTitle}
           onChange={(e) => setEditTitle(e.target.value)}
           onBlur={handleTitleSave}
@@ -294,18 +294,18 @@ function TaskCard({
               <button
                 type="button"
                 onClick={() => setIsSubtasksExpanded(!isSubtasksExpanded)}
-                className="text-slate-400 hover:text-blue-600 mt-0.5"
+                className="text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 mt-0.5"
                 title={isSubtasksExpanded ? "Collapse subtasks" : "Expand subtasks"}
               >
                 {isSubtasksExpanded ? "▼" : "▶"}
               </button>
             )}
             {isSubtask && (
-              <span className="text-xs text-slate-400 mt-1" title="Subtask">└</span>
+              <span className="text-xs text-zinc-400 dark:text-zinc-600 mt-1" title="Subtask">└</span>
             )}
             <button
               type="button"
-              className="flex-1 cursor-grab text-left text-sm font-medium text-slate-800 hover:text-blue-600 active:cursor-grabbing"
+              className="flex-1 cursor-grab text-left text-sm font-semibold text-zinc-800 dark:text-zinc-200 hover:text-zinc-900 dark:hover:text-zinc-100 active:cursor-grabbing transition-colors"
               onClick={(e) => {
                 // Only edit if not dragging
                 if (e.detail === 1) {
@@ -321,14 +321,14 @@ function TaskCard({
           <div className="flex opacity-0 group-hover:opacity-100 transition-opacity gap-1">
             <button
               onClick={() => setIsEditing(true)}
-              className="text-slate-400 hover:text-blue-600 p-1 rounded"
+              className="text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-700 dark:hover:text-zinc-300 p-1 rounded-lg transition-colors"
               title="Edit details"
             >
               ✏️
             </button>
             <button
               onClick={() => void handleDelete()}
-              className="text-slate-400 hover:text-red-600 p-1 rounded"
+              className="text-zinc-500 hover:bg-red-50 dark:hover:bg-red-500/10 hover:text-red-600 dark:hover:text-red-400 p-1 rounded-lg transition-colors"
               title="Delete task"
             >
               🗑️
@@ -340,7 +340,7 @@ function TaskCard({
       {/* Description */}
       {task.description ? (
         <div 
-          className="text-xs text-slate-600 line-clamp-3 prose prose-sm max-w-none"
+          className="text-xs text-zinc-400 line-clamp-3 prose prose-invert prose-sm max-w-none"
           dangerouslySetInnerHTML={{ __html: task.description }}
         />
       ) : null}
@@ -351,7 +351,7 @@ function TaskCard({
           {task.tags.map((tag, idx) => (
             <span
               key={idx}
-              className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-medium text-emerald-700 border border-emerald-200"
+              className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-medium text-emerald-400 border border-emerald-500/20"
             >
               {tag}
             </span>
@@ -361,7 +361,7 @@ function TaskCard({
 
       {/* Blocked Indicator */}
       {blocked && blockingTasks.length > 0 && (
-        <div className="rounded bg-amber-50 border border-amber-200 px-2 py-1 text-xs text-amber-800">
+        <div className="rounded-lg bg-amber-500/10 border border-amber-500/20 px-2 py-1 text-xs text-amber-500">
           <span className="font-semibold">⚠️ Blocked by:</span>{" "}
           {blockingTasks.map((bt) => bt.title).join(", ")}
         </div>
@@ -369,16 +369,16 @@ function TaskCard({
 
       {/* Subtask Progress */}
       {subtasks.length > 0 && (
-        <div className="space-y-1">
-          <div className="flex items-center justify-between text-xs text-slate-600">
+        <div className="space-y-1 mt-2">
+          <div className="flex items-center justify-between text-[10px] text-zinc-500 font-medium uppercase tracking-wider">
             <span>
-              📋 {completedSubtasks}/{subtasks.length} subtasks
+              📋 {completedSubtasks}/{subtasks.length}
             </span>
-            <span className="font-medium">{subtaskProgress}%</span>
+            <span>{subtaskProgress}%</span>
           </div>
-          <div className="h-1.5 w-full rounded-full bg-slate-200 overflow-hidden">
+          <div className="h-1 w-full rounded-full bg-zinc-800 overflow-hidden">
             <div
-              className="h-full bg-blue-500 transition-all"
+              className="h-full bg-zinc-400 transition-all"
               style={{ width: `${subtaskProgress}%` }}
             />
           </div>
@@ -386,29 +386,29 @@ function TaskCard({
       )}
 
       {/* Metadata Row: Priority & Time */}
-      <div className="flex items-center gap-2 flex-wrap">
-        <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide border ${priorityColors[task.priority || "medium"]}`}>
+      <div className="flex items-center gap-2 flex-wrap mt-2">
+        <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider border ${priorityColors[task.priority || "medium"]}`}>
           {task.priority || "medium"}
         </span>
         {task.estimatedMinutes ? (
-          <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] text-slate-600 border border-slate-200">
+          <span className="rounded-full bg-zinc-800/50 px-2 py-0.5 text-[10px] text-zinc-400 border border-zinc-700/50 font-medium">
             ⏱ {task.actualMinutes || 0}/{task.estimatedMinutes}m
           </span>
         ) : null}
         {isOverdue && (
-          <span className="rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-semibold text-red-700 border border-red-300">
+          <span className="rounded-full bg-red-500/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-red-500 border border-red-500/20">
             Overdue
           </span>
         )}
       </div>
 
       {/* Details Row: Due Date & Assignee */}
-      <div className="flex items-center justify-between text-xs text-slate-500">
-        <span className={isOverdue ? "font-semibold text-red-600" : ""}>
-          📅 {new Date(task.dueDate + 'T12:00:00').toLocaleDateString(undefined, { month: "short", day: "numeric" })}
+      <div className="flex items-center justify-between text-[10px] font-medium uppercase tracking-wider text-zinc-500 mt-2">
+        <span className={isOverdue ? "text-red-400 font-bold" : ""}>
+          Due: {new Date(task.dueDate + 'T12:00:00').toLocaleDateString(undefined, { month: "short", day: "numeric" })}
         </span>
         {task.workspaceType === "team" && (
-          <span className="text-slate-400">👤 {assigneeLabel}</span>
+          <span className="text-zinc-600">👤 {assigneeLabel}</span>
         )}
       </div>
 
@@ -464,9 +464,9 @@ function BoardColumn({
   const { setNodeRef } = useDroppable({ id: columnId });
 
   return (
-    <div ref={setNodeRef} className="min-h-[240px] rounded-lg bg-slate-100 p-3">
-      <h3 className="mb-3 text-sm font-semibold">{label}</h3>
-      <div className="space-y-2">
+    <div ref={setNodeRef} className="min-h-[240px] rounded-2xl bg-zinc-100/50 dark:bg-zinc-900/30 border border-zinc-200/80 dark:border-zinc-800/80 p-3">
+      <h3 className="mb-4 text-xs font-bold uppercase tracking-wider text-zinc-500 px-1">{label}</h3>
+      <div className="space-y-3">
         {tasks
           .filter((task) => !task.parentTaskId || task.parentTaskId === null)
           .map((task) => (
@@ -488,12 +488,9 @@ export function TaskBoard({
   tasks,
   members,
   onUpdate,
-  goalId,
-  workspaceType,
-  workspaceId,
   userId,
 }: TaskBoardProps) {
-  const [errorMessage, setErrorMessage] = useState("");
+  const errorMessage = "";
 
   async function handleDragEnd(event: DragEndEvent) {
     const taskId = String(event.active.id);
@@ -506,14 +503,18 @@ export function TaskBoard({
   }
 
   return (
-    <section className="space-y-4 rounded-lg bg-white p-4 shadow-sm">
-      <h2 className="text-lg font-semibold">Tasks</h2>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
+          <span>📋</span> Board
+        </h2>
+      </div>
       {errorMessage ? (
-        <p className="rounded bg-red-50 p-2 text-sm text-red-600 border border-red-200">{errorMessage}</p>
+        <p className="rounded-xl bg-red-500/10 p-3 text-sm text-red-400 border border-red-500/20">{errorMessage}</p>
       ) : null}
       
       <DndContext onDragEnd={(event) => void handleDragEnd(event)}>
-        <div className="grid gap-3 md:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-3">
           {columns.map((column) => (
             <BoardColumn
               key={column.id}
@@ -528,6 +529,6 @@ export function TaskBoard({
           ))}
         </div>
       </DndContext>
-    </section>
+    </div>
   );
 }

@@ -89,6 +89,7 @@ export default function TeamsPage() {
       const nextTeams = await getTeamsForUser(user!.uid);
       setTeams(nextTeams);
     } catch (error) {
+      console.error(error);
       setMessage("Failed to delete team.");
     }
   }
@@ -143,7 +144,7 @@ export default function TeamsPage() {
         </h2>
         {teams.length === 0 ? (
           <p className="text-sm text-slate-500">
-            You don't belong to any teams yet. Create one above to get started!
+            You don&apos;t belong to any teams yet. Create one above to get started!
           </p>
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

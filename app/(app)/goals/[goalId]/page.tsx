@@ -36,6 +36,9 @@ export default function GoalTasksPage() {
       setErrorMessage("");
       // 1. Fetch Goal
       const goalData = await getGoalById(goalId);
+      if (!goalData) {
+        throw new Error("Goal not found");
+      }
       setGoal(goalData);
 
       // 2. Fetch Tasks
@@ -73,8 +76,8 @@ export default function GoalTasksPage() {
     await loadData();
     
     // Check for celebration after an update
-    const completedTasks = tasks.filter(t => t.status === "done").length;
-    const totalTasks = tasks.length;
+    // const completedTasks = tasks.filter(t => t.status === "done").length;
+    // const totalTasks = tasks.length;
     // If we just finished the last task (heuristic: we don't know previous state, but this is okay for "delight")
     // A better way is to pass a "justCompleted" flag, but let's keep it simple.
   }
@@ -104,7 +107,7 @@ export default function GoalTasksPage() {
     : 0;
 
   // Calculate progress based on filtered tasks if filters are active
-  const hasActiveFilters = Object.keys(filter).length > 0 && (
+  /* const hasActiveFilters = Object.keys(filter).length > 0 && (
     (filter.status && filter.status.length > 0) ||
     (filter.priority && filter.priority.length > 0) ||
     (filter.assigneeUserId && filter.assigneeUserId.length > 0) ||
@@ -114,7 +117,7 @@ export default function GoalTasksPage() {
     (filter.searchQuery && filter.searchQuery.trim()) ||
     filter.showBlocked !== undefined ||
     filter.showSubtasks === false
-  );
+  ); */
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

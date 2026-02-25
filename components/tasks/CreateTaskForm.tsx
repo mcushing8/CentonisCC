@@ -101,6 +101,7 @@ export function CreateTaskForm({
       setIsExpanded(false);
       await onTaskCreated();
     } catch (error) {
+       console.error(error);
        setErrorMessage("Failed to create task.");
     }
   }
@@ -168,6 +169,7 @@ export function CreateTaskForm({
         <select
           className="rounded border border-slate-300 p-2 text-sm bg-white"
           value={priority}
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           onChange={(e) => setPriority(e.target.value as any)}
         >
           <option value="low">Low Priority</option>

@@ -95,3 +95,12 @@ export interface WorkspaceSummary {
   inProgressTasks: number;
   doneTasks: number;
 }
+
+export interface Note {
+  id: string;
+  userId: string;
+  title: string;
+  content: string; // TipTap JSON as string
+  createdAt: string;
+  updatedAt: string;
+}
