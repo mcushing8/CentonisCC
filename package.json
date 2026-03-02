@@ -13,6 +13,9 @@
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
     "@tiptap/core": "^3.20.0",
+    "@tiptap/extension-bubble-menu": "^3.20.0",
+    "@tiptap/extension-drag-handle": "^3.20.0",
+    "@tiptap/extension-floating-menu": "^3.20.0",
     "@tiptap/extension-highlight": "^3.20.0",
     "@tiptap/extension-image": "^3.20.0",
     "@tiptap/extension-link": "^3.20.0",
@@ -45,6 +48,7 @@
     "tippy.js": "^6.3.7"
   },
   "devDependencies": {
+    "@tailwindcss/typography": "^0.5.19",
     "@types/node": "^20",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",

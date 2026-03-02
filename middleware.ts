@@ -1,4 +1,3 @@
-/* This file blocks unauthenticated users from app routes using a session cookie. */
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
@@ -6,8 +5,24 @@ export function middleware(request: NextRequest) {
   const sessionCookie = request.cookies.get("mvp_session")?.value;
   const isAuthed = sessionCookie === "1";
   const pathname = request.nextUrl.pathname;
-  const appRoute = pathname.startsWith("/dashboard") || pathname.startsWith("/teams") || pathname.startsWith("/goals") || pathname.startsWith("/notes");
-  const authRoute = pathname.startsWith("/login") || pathname.startsWith("/signup");
+
+  const appRoutes = [
+    "/dashboard",
+    "/daily",
+    "/weekly",
+    "/monthly",
+    "/quarterly",
+    "/yearly",
+    "/projects",
+    "/notes",
+    "/entry",
+    "/settings",
+    "/onboarding",
+  ];
+
+  const appRoute = appRoutes.some((r) => pathname.startsWith(r));
+  const authRoute =
+    pathname.startsWith("/login") || pathname.startsWith("/signup");
 
   if (appRoute && !isAuthed) {
     return NextResponse.redirect(new URL("/login", request.url));
@@ -21,5 +36,19 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/teams/:path*", "/goals/:path*", "/notes/:path*", "/login", "/signup"],
+  matcher: [
+    "/dashboard/:path*",
+    "/daily/:path*",
+    "/weekly/:path*",
+    "/monthly/:path*",
+    "/quarterly/:path*",
+    "/yearly/:path*",
+    "/projects/:path*",
+    "/notes/:path*",
+    "/entry/:path*",
+    "/settings/:path*",
+    "/onboarding/:path*",
+    "/login",
+    "/signup",
+  ],
 };

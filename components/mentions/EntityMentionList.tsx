@@ -4,7 +4,7 @@ export type EntityMentionItem = {
   id: string;
   label: string;
   href: string;
-  type: "note" | "goal";
+  type: "note" | "entry" | "project";
 };
 
 type EntityMentionListProps = {

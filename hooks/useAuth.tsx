@@ -57,13 +57,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return;
     }
     const isAuthRoute = pathname.startsWith("/login") || pathname.startsWith("/signup");
-    const isAppRoute =
-      pathname.startsWith("/dashboard") ||
-      pathname.startsWith("/teams") ||
-      pathname.startsWith("/goals") ||
-      pathname.startsWith("/notes");
+    const isPublicRoute = isAuthRoute || pathname === "/";
+    const isOnboarding = pathname.startsWith("/onboarding");
 
-    if (!user && (isAppRoute || pathname === "/")) {
+    if (!user && !isPublicRoute && !isOnboarding) {
       router.replace("/login");
     }
     if (user && (pathname === "/" || isAuthRoute)) {
