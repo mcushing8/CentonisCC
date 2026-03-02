@@ -13,7 +13,7 @@ import {
 import { SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { useDroppable } from "@dnd-kit/core";
-import { Trash2, GripVertical, Check } from "lucide-react";
+import { Trash2, GripVertical, Check, Sun } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useWorkspaceContext } from "@/hooks/useWorkspaceContext";
 import {
@@ -115,6 +115,7 @@ function Column({
   onDelete,
   onToggleStatus,
   onOpenPeek,
+  onNewDay,
 }: {
   userEmail: string;
   userId: string;
@@ -123,6 +124,7 @@ function Column({
   onDelete: (id: string) => void;
   onToggleStatus: (id: string, currentStatus: string) => void;
   onOpenPeek: (id: string) => void;
+  onNewDay: (userId: string) => void;
 }) {
   const { setNodeRef, isOver } = useDroppable({ id: userId });
   const [newTaskTitle, setNewTaskTitle] = useState("");
@@ -135,24 +137,24 @@ function Column({
   }
 
   // Use a simple color mapping based on userId length or hash to give each column a subtle tint
-  const colors = [
-    "border-blue-400/50 dark:border-blue-500/50",
-    "border-purple-400/50 dark:border-purple-500/50",
-    "border-amber-400/50 dark:border-amber-500/50",
-    "border-emerald-400/50 dark:border-emerald-500/50",
-    "border-rose-400/50 dark:border-rose-500/50",
+  const topBorderColors = [
+    "border-t-blue-400 dark:border-t-blue-500",
+    "border-t-purple-400 dark:border-t-purple-500",
+    "border-t-amber-400 dark:border-t-amber-500",
+    "border-t-emerald-400 dark:border-t-emerald-500",
+    "border-t-rose-400 dark:border-t-rose-500",
   ];
-  const colorIndex = userId.length % colors.length;
-  const borderColor = colors[colorIndex];
+  const colorIndex = userId.length % topBorderColors.length;
+  const topBorder = topBorderColors[colorIndex];
 
   return (
     <div
       ref={setNodeRef}
-      className={`flex flex-col rounded-2xl border-t-4 ${borderColor} bg-zinc-50/40 dark:bg-[#1a1a1a]/40 min-h-[320px] sm:min-h-[400px] transition-colors ${
-        isOver ? "bg-zinc-100/60 dark:bg-[#202020]/60 ring-2 ring-zinc-200 dark:ring-zinc-800" : ""
+      className={`flex flex-col rounded-2xl border border-zinc-200 dark:border-zinc-700 border-t-4 ${topBorder} bg-white dark:bg-zinc-900/95 shadow-md shadow-zinc-200/50 dark:shadow-zinc-950/50 min-h-[320px] sm:min-h-[400px] transition-colors ${
+        isOver ? "ring-2 ring-zinc-300 dark:ring-zinc-600 shadow-lg" : ""
       }`}
     >
-      <div className="flex items-center justify-between px-4 sm:px-5 py-3 sm:py-4 border-b border-zinc-200/50 dark:border-zinc-800/50">
+      <div className="flex items-center justify-between px-4 sm:px-5 py-3 sm:py-4 border-b border-zinc-200/50 dark:border-zinc-800/50 gap-2">
         <div className="flex items-center gap-2.5 sm:gap-3 overflow-hidden min-w-0">
           <div className="h-7 w-7 sm:h-6 sm:w-6 rounded-full bg-zinc-200 dark:bg-zinc-800 flex items-center justify-center shrink-0">
             <span className="text-xs font-semibold text-zinc-600 dark:text-zinc-400">
@@ -166,6 +168,14 @@ function Column({
             {tasks.length}
           </span>
         </div>
+        <button
+          onClick={() => onNewDay(userId)}
+          disabled={tasks.length === 0}
+          className="shrink-0 flex items-center gap-1 rounded-md p-1.5 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors touch-manipulation"
+          aria-label="New day"
+        >
+          <Sun className="h-4 w-4" />
+        </button>
       </div>
       <div className="flex-1 space-y-2 sm:space-y-2.5 p-3 sm:p-3 flex flex-col min-h-0">
         <SortableContext items={tasks.map((t) => t.id)} strategy={verticalListSortingStrategy}>
@@ -276,6 +286,20 @@ export function DailyKanban() {
   async function handleDelete(id: string) {
     await deleteDailyTask(id);
     setTasks((prev) => prev.filter((t) => t.id !== id));
+    if (peekId === id) closePeek();
+  }
+
+  async function handleNewDay(columnUserId: string) {
+    const columnTasks = tasks.filter(
+      (t) => t.createdByUserId === columnUserId && t.date === date
+    );
+    if (columnTasks.length === 0) return;
+    const deletedIds = new Set(columnTasks.map((t) => t.id));
+    for (const task of columnTasks) {
+      await deleteDailyTask(task.id);
+    }
+    setTasks((prev) => prev.filter((t) => !deletedIds.has(t.id)));
+    if (peekId && deletedIds.has(peekId)) closePeek();
   }
 
   async function handleToggleStatus(id: string, currentStatus: string) {
@@ -355,6 +379,7 @@ export function DailyKanban() {
                     onDelete={handleDelete}
                     onToggleStatus={handleToggleStatus}
                     onOpenPeek={openPeek}
+                    onNewDay={handleNewDay}
                   />
                 </div>
               ))}

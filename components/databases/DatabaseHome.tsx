@@ -10,6 +10,8 @@ import {
   FileText,
 } from "lucide-react";
 import { useWorkspaceContext } from "@/hooks/useWorkspaceContext";
+import { DailyTasksSummary } from "@/components/databases/DailyTasksSummary";
+import { EffortChart } from "@/components/databases/EffortChart";
 
 export function DatabaseHome() {
   const { workspace } = useWorkspaceContext();
@@ -58,6 +60,8 @@ export function DatabaseHome() {
         {workspace?.name || "Dashboard"}
       </h1>
 
+      <EffortChart />
+
       <div className="flex flex-col space-y-1">
         {databases.map((db) => (
           <Link
@@ -73,6 +77,10 @@ export function DatabaseHome() {
             </span>
           </Link>
         ))}
+      </div>
+
+      <div className="mt-16">
+        <DailyTasksSummary />
       </div>
     </div>
   );
