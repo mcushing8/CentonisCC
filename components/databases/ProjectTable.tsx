@@ -1,4 +1,5 @@
 "use client";
+import { PageCoverBanner } from "@/components/ui/PageCoverBanner";
 import { useCallback, useEffect, useState } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { ExternalLink, Trash2 } from "lucide-react";
@@ -107,6 +108,7 @@ export function ProjectTable() {
   return (
     <div className="space-y-6 pb-24">
       <div className="px-2">
+        <PageCoverBanner pageKey="projects" className="mb-6" />
         <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 mb-6">
           Projects
         </h1>

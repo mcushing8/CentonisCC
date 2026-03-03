@@ -1,6 +1,7 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { PageCoverBanner } from "@/components/ui/PageCoverBanner";
 import {
   DndContext,
   DragOverlay,
@@ -27,6 +28,7 @@ import {
 } from "@/services/dailyTaskService";
 import { listWorkspaceMembers } from "@/services/workspaceService";
 import { SidePeek } from "@/components/ui/SidePeek";
+import type { EntryStatus } from "@/types/models";
 import { DailyTaskPage } from "@/components/databases/DailyTaskPage";
 import type { DailyTask, WorkspaceMember } from "@/types/models";
 
@@ -305,9 +307,9 @@ export function DailyKanban() {
   async function handleToggleStatus(id: string, currentStatus: string) {
     const newStatus = currentStatus === "done" ? "not_started" : "done";
     setTasks((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, status: newStatus as any } : t))
+      prev.map((t) => (t.id === id ? { ...t, status: newStatus as EntryStatus } : t))
     );
-    await updateDailyTaskStatus(id, newStatus as any);
+    await updateDailyTaskStatus(id, newStatus as EntryStatus);
   }
 
   function handleDragStart(event: DragStartEvent) {
@@ -323,7 +325,7 @@ export function DailyKanban() {
     const overId = over.id as string;
     const isColumn = members.some((m) => m.userId === overId);
     
-    let newUserId = isColumn ? overId : tasks.find((t) => t.id === overId)?.createdByUserId;
+    const newUserId = isColumn ? overId : tasks.find((t) => t.id === overId)?.createdByUserId;
 
     if (!newUserId) return;
 
@@ -339,6 +341,7 @@ export function DailyKanban() {
   return (
     <div className="space-y-4 sm:space-y-6 pb-24 sm:pb-32">
       <div className="px-4 sm:px-6 max-w-[1600px] mx-auto">
+        <PageCoverBanner pageKey="daily" className="mb-6" />
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6 mb-6 sm:mb-8 mt-2 sm:mt-4">
           <div className="min-w-0">
             <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 truncate">

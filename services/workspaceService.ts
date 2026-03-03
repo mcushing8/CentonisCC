@@ -108,6 +108,25 @@ export async function updateWorkspaceName(workspaceId: string, name: string) {
   });
 }
 
+export async function updatePageBanner(
+  workspaceId: string,
+  pageKey: string,
+  url: string | null
+) {
+  const docRef = doc(db, "workspaces", workspaceId);
+  const snapshot = await getDoc(docRef);
+  if (!snapshot.exists()) return;
+
+  const data = snapshot.data();
+  const pageBanners = { ...(data.pageBanners || {}), [pageKey]: url || null };
+  if (!url) delete pageBanners[pageKey];
+
+  await updateDoc(docRef, {
+    pageBanners,
+    updatedAt: nowIso(),
+  });
+}
+
 export async function listWorkspaceMembers(
   workspaceId: string
 ): Promise<WorkspaceMember[]> {

@@ -1,11 +1,6 @@
 "use client";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { NotesTable } from "@/components/notes/NotesTable";
 
-export default function NotesRedirectPage() {
-  const router = useRouter();
-  useEffect(() => {
-    router.replace("/dashboard");
-  }, [router]);
-  return null;
+export default function NotesPage() {
+  return <NotesTable />;
 }

@@ -22,6 +22,8 @@ export interface Workspace {
   name: string;
   createdByUserId: string;
   inviteCode: string;
+  /** Page cover banner URLs keyed by page (dashboard, daily, weekly, monthly, quarterly, yearly, projects, notes) */
+  pageBanners?: Record<string, string>;
   createdAt: string;
   updatedAt: string;
 }

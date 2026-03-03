@@ -12,6 +12,7 @@ import {
 import { useWorkspaceContext } from "@/hooks/useWorkspaceContext";
 import { DailyTasksSummary } from "@/components/databases/DailyTasksSummary";
 import { EffortChart } from "@/components/databases/EffortChart";
+import { PageCoverBanner } from "@/components/ui/PageCoverBanner";
 
 export function DatabaseHome() {
   const { workspace } = useWorkspaceContext();
@@ -55,7 +56,8 @@ export function DatabaseHome() {
   ];
 
   return (
-    <div className="max-w-3xl mx-auto pt-24 pb-12 px-8">
+    <div className="max-w-3xl mx-auto pt-12 pb-12 px-8">
+      <PageCoverBanner pageKey="dashboard" className="mb-6" />
       <h1 className="text-4xl font-bold text-zinc-900 dark:text-zinc-100 mb-8">
         {workspace?.name || "Dashboard"}
       </h1>

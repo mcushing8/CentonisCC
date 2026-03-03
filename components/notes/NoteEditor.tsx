@@ -114,6 +114,7 @@ export function NoteEditor({ content, onChange }: NoteEditorProps) {
   });
 
   const setLink = useCallback(() => {
+    if (!editor) return;
     const previousUrl = editor.getAttributes("link").href;
     const url = window.prompt("URL", previousUrl || "https://");
     if (url === null) return;
@@ -139,7 +140,6 @@ export function NoteEditor({ content, onChange }: NoteEditorProps) {
 
       <BubbleMenu
         editor={editor}
-        tippyOptions={{ duration: 100 }}
         className="flex items-center gap-0.5 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 shadow-lg overflow-hidden"
       >
         <button

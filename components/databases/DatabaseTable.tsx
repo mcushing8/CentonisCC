@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { ExternalLink, Trash2 } from "lucide-react";
+import { PageCoverBanner } from "@/components/ui/PageCoverBanner";
 import { useAuth } from "@/hooks/useAuth";
 import { useWorkspaceContext } from "@/hooks/useWorkspaceContext";
 import {
@@ -138,6 +139,7 @@ export function DatabaseTable({ databaseType }: DatabaseTableProps) {
   return (
     <div className="space-y-6 pb-24">
       <div className="px-2">
+        <PageCoverBanner pageKey={databaseType} className="mb-6" />
         <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 mb-6">
           {label} Goals
         </h1>
