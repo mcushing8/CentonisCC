@@ -64,6 +64,7 @@ export function NoteEditor({ content, onChange }: NoteEditorProps) {
   const [showLegend, setShowLegend] = useState(false);
   const [isTouchLayout, setIsTouchLayout] = useState(false);
   const [isEditorFocused, setIsEditorFocused] = useState(false);
+  const [toolbarBottom, setToolbarBottom] = useState(0);
 
   const mentionItemsRef = useRef<EntityMentionItem[]>([]);
 
@@ -148,8 +149,28 @@ export function NoteEditor({ content, onChange }: NoteEditorProps) {
   useEffect(() => {
     refreshTouchLayout();
     window.addEventListener("resize", refreshTouchLayout);
+
+    const vv = window.visualViewport;
+    const updateToolbarPosition = () => {
+      if (!vv) return;
+      // When the virtual keyboard is open, visualViewport.height < window.innerHeight.
+      // Position the toolbar at the top of the keyboard.
+      const keyboardOffset = window.innerHeight - (vv.height + vv.offsetTop);
+      setToolbarBottom(Math.max(0, keyboardOffset));
+    };
+
+    if (vv) {
+      vv.addEventListener("resize", updateToolbarPosition);
+      vv.addEventListener("scroll", updateToolbarPosition);
+      updateToolbarPosition();
+    }
+
     return () => {
       window.removeEventListener("resize", refreshTouchLayout);
+      if (vv) {
+        vv.removeEventListener("resize", updateToolbarPosition);
+        vv.removeEventListener("scroll", updateToolbarPosition);
+      }
     };
   }, [refreshTouchLayout]);
 
@@ -163,7 +184,7 @@ export function NoteEditor({ content, onChange }: NoteEditorProps) {
     "flex shrink-0 items-center gap-1.5 rounded-lg border border-zinc-200 dark:border-zinc-700 px-2.5 py-2 text-xs font-medium text-zinc-700 dark:text-zinc-300 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800 disabled:opacity-40 disabled:cursor-not-allowed";
   const touchToolbarButtonActive =
     "bg-zinc-900 text-white border-zinc-900 dark:bg-zinc-100 dark:text-zinc-900 dark:border-zinc-100";
-  const showTouchToolbar = isTouchLayout && isEditorFocused;
+  const showTouchToolbar = isTouchLayout && isEditorFocused && toolbarBottom > 0;
 
   const touchActions = [
     {
@@ -324,8 +345,8 @@ export function NoteEditor({ content, onChange }: NoteEditorProps) {
 
       {showTouchToolbar && (
         <div
-          className="fixed inset-x-0 bottom-0 z-50 border-t border-zinc-200 dark:border-zinc-800 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md px-3 py-2"
-          style={{ paddingBottom: "max(0.5rem, env(safe-area-inset-bottom))" }}
+          className="fixed inset-x-0 z-50 border-t border-zinc-200 dark:border-zinc-800 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md px-3 py-2"
+          style={{ bottom: `${toolbarBottom}px` }}
         >
           <div className="flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {touchActions.map((action) => {

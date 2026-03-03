@@ -179,7 +179,7 @@ function Column({
               }}
               onBlur={handleAddSubmit}
               placeholder="Task name…"
-              className="w-full bg-zinc-50 dark:bg-zinc-800/50 text-sm text-zinc-700 dark:text-zinc-300 placeholder:text-zinc-400 dark:placeholder:text-zinc-500 outline-none px-3 py-2 rounded-lg border border-zinc-200 dark:border-zinc-700 focus:border-zinc-300 dark:focus:border-zinc-600 transition-colors touch-manipulation min-h-[40px] sm:min-h-0"
+              className="w-full bg-zinc-50 dark:bg-zinc-800/50 text-base sm:text-sm text-zinc-700 dark:text-zinc-300 placeholder:text-zinc-400 dark:placeholder:text-zinc-500 outline-none px-3 py-2 rounded-lg border border-zinc-200 dark:border-zinc-700 focus:border-zinc-300 dark:focus:border-zinc-600 transition-colors touch-manipulation min-h-[40px] sm:min-h-0"
             />
           ) : (
             <button
@@ -325,7 +325,7 @@ export function DailyKanban() {
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
-            className="w-full sm:w-auto sm:min-w-[160px] rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50 px-4 py-2 text-sm font-medium text-zinc-700 dark:text-zinc-300 outline-none focus:border-zinc-300 dark:focus:border-zinc-700 transition-colors touch-manipulation"
+            className="w-full sm:w-auto sm:min-w-[160px] rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50 px-4 py-2 text-base sm:text-sm font-medium text-zinc-700 dark:text-zinc-300 outline-none focus:border-zinc-300 dark:focus:border-zinc-700 transition-colors touch-manipulation"
           />
         </div>
 
